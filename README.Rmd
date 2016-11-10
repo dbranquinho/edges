@@ -1,0 +1,103 @@
+---
+title: "Desafio Data Science"
+subtitle: "Centrality metrics"
+author: "Delermando Branquinho Filho"
+date: "10 de novembro de 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Fist Challenge
+
+In this challenge, suppose we are looking to do social network
+analysis for prospective customers. We want to extract from
+their social network a metric called "closeness centrality".
+ 
+Centrality metrics try to approximate a measure of influence
+of an individual within a social network. The distance between
+any two vertices is their shortest path. The *farness*
+of a given vertex *v* is the sum of all distances from each vertex
+to *v*. Finally, the *closeness* of a vertex *v* is the inverse
+of the *farness*.
+ 
+The first part of the challenge is to rank the vertices in a given
+graph by their *closeness*. The graph is provided in the attached
+file; each line of the file consists of two vertex names separated by
+a single space, representing an edge between those two nodes.
+
+### Load Libraries
+
+```{r, message=F, warning=F}
+library(GGally)
+library(network)
+library(sna)
+library(ggplot2)
+
+```
+
+### Loadding Dataset
+
+```{r}
+myData <- as.matrix(read.table("D:/Data Science/Semantix/edges.dat", quote="\"", 
+                    comment.char="", stringsAsFactors=FALSE))
+```
+
+### Creating Network Data F=Graph
+```{r}
+
+net = rgraph(myData, mode = "graph")
+net = network(net, directed = FALSE)
+network.vertex.names(net) = 1:dim(myData)[1]
+```
+
+### Plotting
+```{r}
+
+ggnet2(net,color = "blue", label = TRUE, label.color = "white")
+
+```
+
+
+## Second Challenge
+
+The second part of the challenge is to create a RESTful web server
+with endpoints to register edges and display the centrality of the graph.
+
+### Degree 
+The node degree is the number of relations (edges) of the nodes. 
+```{r}
+degree(net)
+```
+
+Betweenness centrality is even more important statistical property of a network. This is
+applied in a lot of real-world problems, such as finding influential people in a social network,
+finding crucial hubs in a computer network, finding border crossing points which have a
+largest traffic or trade flow. 
+
+```{r}
+degree(net,cmode="indegree")
+```
+
+
+Closeness (farness) centrality indicates how long it will take for information from a given node to
+reach other nodes in the network. The smaller the value, the more central role the node plays
+in the network.
+
+```{r}
+degree(net,cmode="outdegree")
+```
+
+The centrol point of the map is:
+
+```{r}
+centralization(net,degree,cmode="indegree")
+
+```
+
+
+### REFERENCES
+Alex, B. 1950. Communication patterns in task-oriented groups. J. Acoust. Soc. Am. 22 (6): 725-730.
+Sabidussi, G. 1966. The centrality index of a graph. Psychometrika. 31: 581-603.
