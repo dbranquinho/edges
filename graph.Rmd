@@ -7,7 +7,7 @@ subtitle: Centrality metrics
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r, message=F, warning=F}
@@ -25,6 +25,7 @@ mydata <- as.matrix(read.table("D:/Data Science/Semantix/edges.dat", quote="\"",
 net = rgraph(mydata, mode = "graph")
 net = network(net, directed = TRUE)
 network.vertex.names(net) = 1:dim(mydata)[1]
+palette <- c("black","purple","blue","green","orange","red")
 
 graph <- graph.data.frame(mydata, directed=T)
 graph <- simplify(graph)
