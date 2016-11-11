@@ -1,9 +1,9 @@
 ---
-title: "Desafio Data Science"
-subtitle: "Centrality metrics"
+title: "Data Science Challenge"
 author: "Delermando Branquinho Filho"
 date: "10 de novembro de 2016"
 output: html_document
+subtitle: Centrality metrics
 ---
 
 ```{r setup, include=FALSE}
@@ -35,7 +35,11 @@ library(GGally)
 library(network)
 library(sna)
 library(ggplot2)
+```
 
+*Seting seed for reproductble researsh*
+```{r}
+set.seed(3)
 ```
 
 ### Loadding Dataset
@@ -45,21 +49,26 @@ myData <- as.matrix(read.table("D:/Data Science/Semantix/edges.dat", quote="\"",
                     comment.char="", stringsAsFactors=FALSE))
 ```
 
-### Creating Network Data F=Graph
-```{r}
+### Creating Network Data
 
+The nodes are numbered by one to number of nodes.
+
+```{r}
 net = rgraph(myData, mode = "graph")
 net = network(net, directed = FALSE)
 network.vertex.names(net) = 1:dim(myData)[1]
 ```
 
 ### Plotting
-```{r}
-
-ggnet2(net,color = "blue", label = TRUE, label.color = "white")
+```{r, message=F, warning=F}
+c.d   <- degree(net)
+col<- as.integer(5*(c.d-min(c.d))/diff(range(c.d))+1)
+palette <- c("purple","blue","green","yellow","orange","red")
+g<-ggnet2(net, label = TRUE, label.color = "white",color = palette[col])
+plot(g,vertex.color=palette[col],main="Degree Centrality",
+     layout=layout.fruchterman.reingold)
 
 ```
-
 
 ## Second Challenge
 
@@ -90,13 +99,51 @@ in the network.
 degree(net,cmode="outdegree")
 ```
 
-The centrol point of the map is:
+*Density*
 
+The density of a graph is the number of existing edges divided by
+the number of possible ones (assuming no duplicates or loops)
 ```{r}
-centralization(net,degree,cmode="indegree")
-
+gden(net,mode="graph")
 ```
 
+
+Connectedness takes one or more graphs and returns the Krackhardt connectedness scores
+
+```{r}
+connectedness(net)
+```
+
+### Centrality
+Centralization returns the centralization GLI (graph-level index) for a given graph in dat, given a (node) centrality measure FUN. Centralization follows Freeman's (1979) generalized definition of network centralization, and can be used with any properly defined centrality measure.
+```{r}
+centralization(net,degree,mode="graph")
+```
+
+
+### Betweenness Centrality
+A measure of the degree to which a given node lies on the shortest paths (geodesics) between other nodes in the graph The centroid point of the map is:
+
+```{r}
+betweenness(net)
+centralization(net,betweenness,mode="graph")
+```
+
+### Closeness Centrality
+Closeness Centrality (CLC) is a category of measures that rate the centrality of a node by its closeness (distance) to other nodes. Closeness Centrality decreases if either the number of nodes reachable from the node in question decreases, or the distances between the nodes increases.
+
+```{r}
+closeness(net)
+centralization(net,closeness,mode="graph")
+```
+
+*Egocentricity*
+The egocentric network (or ego net) of vertex v in graph G is defined as the subgraph of G induced by v and its neighbors.
+
+```{r}
+newEgo <- ego.extract(net,6)
+head(closeness(newEgo))
+```
 
 ### REFERENCES
 Alex, B. 1950. Communication patterns in task-oriented groups. J. Acoust. Soc. Am. 22 (6): 725-730.
