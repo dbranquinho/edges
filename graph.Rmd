@@ -1,0 +1,43 @@
+---
+title: "Data Science Challenge"
+author: "Delermando Branquinho Filho"
+date: "10 de novembro de 2016"
+output: html_document
+subtitle: Centrality metrics
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+```{r, message=F, warning=F}
+library(magrittr)
+library(visNetwork)
+library(GGally)
+library(network)
+library(sna)
+library(ggplot2)
+library(igraph)
+
+set.seed(3)
+mydata <- as.matrix(read.table("D:/Data Science/Semantix/edges.dat", quote="\"", 
+                               comment.char="", stringsAsFactors=FALSE))
+net = rgraph(mydata, mode = "graph")
+net = network(net, directed = TRUE)
+network.vertex.names(net) = 1:dim(mydata)[1]
+
+graph <- graph.data.frame(mydata, directed=T)
+graph <- simplify(graph)
+
+V(graph)$indegree <- centr_degree(graph, mode = "in")$res
+
+nodes <- get.data.frame(graph, what="vertices")
+nodes <- data.frame(id = nodes$name, title = nodes$name, group = nodes$indegree, indegree = nodes$indegree)
+
+nodes <- nodes[order(nodes$id, decreasing = F),]
+
+edges <- get.data.frame(graph, what="edges")[1:2]
+
+visNetwork(nodes, edges, height = "500px", width = "100%")
+
+```
