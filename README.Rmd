@@ -2,7 +2,7 @@
 title: "Data Science Challenge"
 author: "Delermando Branquinho Filho"
 date: "10 de novembro de 2016"
-output: html_document
+output: pdf_document
 subtitle: Centrality metrics
 ---
 
@@ -63,7 +63,7 @@ network.vertex.names(net) = 1:dim(myData)[1]
 ```{r, message=F, warning=F}
 c.d   <- degree(net)
 col<- as.integer(5*(c.d-min(c.d))/diff(range(c.d))+1)
-palette <- c("purple","blue","green","yellow","orange","red")
+palette <- c("black","purple","blue","green","orange","red")
 g<-ggnet2(net, label = TRUE, label.color = "white",color = palette[col])
 plot(g,vertex.color=palette[col],main="Degree Centrality",
      layout=layout.fruchterman.reingold)

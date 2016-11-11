@@ -4,12 +4,13 @@ library(sna)
 library(ggplot2)
 
 myData <- as.matrix(read.table("D:/Data Science/Semantix/edges.dat", quote="\"", 
-                    comment.char="", stringsAsFactors=FALSE))
+                               comment.char="", stringsAsFactors=FALSE))
+set.seed(3)
 net = rgraph(myData, mode = "graph")
-net = network(net, directed = FALSE)
+net = network(net, directed = TRUE)
 network.vertex.names(net) = 1:dim(myData)[1]
 par(new=F)
-palette <- c("purple","blue","green","yellow","orange","red")
+palette <- c("black","purple","blue","green","orange","red")
 
 c.d   <- degree(net)
 col<- as.integer(5*(c.d-min(c.d))/diff(range(c.d))+1)
@@ -23,4 +24,35 @@ degree(net,cmode="indegree")
 degree(net,cmode="outdegree")
 
 degree(net)
-centralization(net,degree,cmode="indegree")
+degree(net,cmode="indegree")
+degree(net,cmode="outdegree")
+
+
+print(degree(net))
+print(gden(net,mode="graph"))
+print(centralization(net,degree,cmode="indegree"))
+
+gden(net,mode="graph")
+
+connectedness(net)
+
+betweenness(net)
+
+geo=geodist(net)
+
+geo$gdist
+
+newEgo <- ego.extract(net,10)
+newEgo
+
+closeness(newEgo)
+
+
+geo=geodist(net)
+geo$gdist
+
+centralization(net,degree,mode="graph")
+centralization(net,betweenness,mode="graph")
+centralization(net,closeness,mode="graph")
+
+
